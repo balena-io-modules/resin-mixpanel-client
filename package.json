@@ -1,0 +1,23 @@
+{
+  "name": "resin-mixpanel-client",
+  "version": "2.2.1",
+  "description": "The library to normalize the Mixpanel browser / node idiosyncrasies",
+  "main": "src/resin-mixpanel-client.js",
+  "scripts": {
+    "lint": "resin-lint src"
+  },
+  "dependencies": {
+    "bluebird": "^3.4.7",
+    "resin-universal-mixpanel": "^2.1.1"
+  },
+  "devDependencies": {
+    "resin-lint": "^1.4.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:balena-io-modules/resin-mixpanel-client.git"
+  },
+  "author": "Iskren Slavov <iskren@resin.io>",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/balena-io-modules/resin-mixpanel-client"
+}
