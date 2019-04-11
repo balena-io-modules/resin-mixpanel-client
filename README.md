@@ -36,4 +36,4 @@ if (eventType is 'logout') {
 }
 ```
 
-ALl methods return Promises.
+All methods return Promises.
