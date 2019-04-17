@@ -110,6 +110,20 @@ module.exports = function(token, options) {
 
 				return mixpanel.track(event, props, callback)
 			})
+		},
+		getDistinctId: function() {
+			if (isBrowser) {
+				return mixpanel.get_distinct_id()
+			} else {
+				throw new Error('(Resin Mixpanel Client) function getDistinctId is only available for the browser')
+			}
+		},
+		identify: function(id) {
+			if (isBrowser) {
+				return mixpanel.identify(id)
+			} else {
+				throw new Error('(Resin Mixpanel Client) function identify is only available for the browser')
+			}
 		}
 	}
 
