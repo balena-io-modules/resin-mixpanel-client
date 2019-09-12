@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "bluebird": "^3.4.7",
-    "resin-universal-mixpanel": "^2.1.1"
+    "resin-universal-mixpanel": "^2.3.1"
   },
   "devDependencies": {
     "resin-lint": "^1.4.0"
