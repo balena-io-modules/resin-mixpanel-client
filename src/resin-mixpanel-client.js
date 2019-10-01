@@ -38,11 +38,46 @@ module.exports = function(token, options) {
 		})
 	}
 
+	function associateDeviceId(deviceIds, userName, callIdentify) {
+		var distinctId = mixpanel.get_property('distinct_id');
+		var originalDeviceId = mixpanel.get_property('$device_id');
+
+		if (callIdentify) {
+			originalDeviceId = deviceIds[0];
+			mixpanel.identify(originalDeviceId);
+			distinctId = mixpanel.get_property('distinct_id');
+		}
+
+		// Send alias events to combine all input devices under a single user name.
+		for (var i = 0; i < deviceIds.length; i++) {
+			var deviceId = deviceIds[i];
+			if (!callIdentify || i > 0) {
+				mixpanel.register({
+					'distinct_id': deviceId,
+					'$device_id': deviceId
+				});
+			}
+			// All but the first alias calls are for our proxy only. They are practically rejected by MixPanel.
+			mixpanel.alias(userName, deviceId);
+		}
+
+		// Restore original state.
+		mixpanel.register({
+			'distinct_id': distinctId,
+			'$device_id': originalDeviceId
+		});
+	}
+
 	var self = {
-		signup: function(uid) {
+		signup: function(uid, deviceIds) {
 			return mixpanelToPromise(function (callback) {
 				if (isBrowser) {
-					callback(mixpanel.alias(uid))
+					if (deviceIds && deviceIds.length > 0) {
+						associateDeviceId(deviceIds, uid, true);
+						callback();
+					} else {
+						callback(mixpanel.alias(uid))
+					}
 				} else {
 					mixpanel.alias(uid, uid, callback)
 				}
@@ -52,11 +87,14 @@ module.exports = function(token, options) {
 				return self.login(uid)
 			})
 		},
-		login: function(uid) {
+		login: function(uid, deviceIds) {
 			self.userId = uid
 
 			return mixpanelToPromise(function (callback) {
 				if (isBrowser) {
+					if (deviceIds && deviceIds.length > 0) {
+						associateDeviceId(deviceIds, uid, false);
+					}
 					mixpanel.identify(uid)
 					callback()
 				} else {
